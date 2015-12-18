@@ -16,13 +16,12 @@
         line-height: 1.4;
       }
     </style>
-
     <script>
-      var host = location.origin.replace(/^http/, 'ws')
+      var host = location.origin.replace(/^http/, 'ws');
       var ws = new WebSocket(host);
-      ws.onmessage = function (event) {
+      ws.onmessage = function(event) {
         var li = document.createElement('li');
-        li.innerHTML = JSON.parse(event.data);
+        li.innerHTML = event.data;
         document.querySelector('#messages').appendChild(li);
       };
     </script>
