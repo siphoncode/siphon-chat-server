@@ -1,28 +1,30 @@
-var WebSocketServer = require("ws").Server
-var http = require("http")
-var express = require("express")
-var app = express()
-var port = process.env.PORT || 5000
+var WebSocketServer = require("ws").Server;
+var http = require("http");
+var express = require("express");
+var app = express();
+var port = process.env.PORT || 5000;
 
-app.use(express.static(__dirname + "/"))
+app.use(express.static(__dirname + "/"));
 
-var server = http.createServer(app)
-server.listen(port)
+var server = http.createServer(app);
+server.listen(port);
+console.log('HTTP server listening on %d', port);
 
-console.log("http server listening on %d", port)
+var wss = new WebSocketServer({server: server});
+console.log('Websocket server created');
 
-var wss = new WebSocketServer({server: server})
-console.log("websocket server created")
+wss.broadcast = function(data) {
+  for (var i in this.clients) {
+    this.clients[i].send(data);
+  }
+};
 
-wss.on("connection", function(ws) {
-  var id = setInterval(function() {
-    ws.send(JSON.stringify(new Date()), function() {  })
-  }, 1000)
+var currentID = 0;
 
-  console.log("websocket connection open")
-
-  ws.on("close", function() {
-    console.log("websocket connection close")
-    clearInterval(id)
-  })
-})
+wss.on('connection', function(ws) {
+  ws.id = currentID++; // give the user a sort-of unique ID
+  console.log('New connection from #' + ws.id);
+  ws.on('message', function(message) {
+    wss.broadcast('[user-' + ws.id + '] ' + message);
+  });
+});
