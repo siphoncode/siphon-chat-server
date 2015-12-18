@@ -1,6 +1,9 @@
-# Node.js Websocket Test
+siphon-chat-server
+==================
 
-A tiny demo using the [einaros/ws](http://einaros.github.io/ws/) WebSockets implementation.
+A very simple chat server using Node.js + websockets.
+
+Derived from: https://github.com/heroku-examples/node-ws-test
 
 # Running Locally
 
