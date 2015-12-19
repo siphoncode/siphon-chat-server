@@ -21,8 +21,10 @@
       var ws = new WebSocket(host);
       ws.onmessage = function(event) {
         var li = document.createElement('li');
-        li.innerHTML = event.data;
-        document.querySelector('#messages').appendChild(li);
+        if (event.data != 'ping') {
+            li.innerHTML = event.data;
+            document.querySelector('#messages').appendChild(li);
+        }
       };
     </script>
   </head>
